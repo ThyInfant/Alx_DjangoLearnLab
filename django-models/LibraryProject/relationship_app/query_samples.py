@@ -1,11 +1,13 @@
 from relationship_app.models import Author, Book, Library, Librarian
 
+
 # -------------------------------
 # Query all books by a specific author
 # -------------------------------
 
-author = Author.objects.get(name="George Orwell")
-books_by_author = author.books.all()
+author_name = "George Orwell"
+author = Author.objects.get(name=author_name)
+books_by_author = Book.objects.filter(author=author)
 
 for book in books_by_author:
     print(book.title)
@@ -15,10 +17,11 @@ for book in books_by_author:
 # List all books in a library
 # -------------------------------
 
-library = Library.objects.get(name="Central Library")
-library_books = library.books.all()
+library_name = "Central Library"
+library = Library.objects.get(name=library_name)
+books_in_library = library.books.all()
 
-for book in library_books:
+for book in books_in_library:
     print(book.title)
 
 
@@ -26,7 +29,8 @@ for book in library_books:
 # Retrieve the librarian for a library
 # -------------------------------
 
-library = Library.objects.get(name="Central Library")
-librarian = library.librarian
+library_name = "Central Library"
+library = Library.objects.get(name=library_name)
+librarian = Librarian.objects.get(library=library)
 
 print(librarian.name)
