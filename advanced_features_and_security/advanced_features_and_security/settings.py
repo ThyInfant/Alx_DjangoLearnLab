@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-co7ktqxe$&oe$+s4jqj9!0=eg+0!ssch3cpxhl0)&lhqnum%@q'
+SECRET_KEY = 'django-insecure-s0prr!&_buu&(@6#2qijt&-x8i45c6w%&r^vy_ta*v*4(4el9a'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
-    "accounts",
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -100,6 +100,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Custom User Model
+AUTH_USER_MODEL = 'users.CustomUser'
+
+
+
+# Media files for profile photo uploads
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
@@ -122,7 +131,3 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-AUTH_USER_MODEL = "accounts.CustomUser"
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
