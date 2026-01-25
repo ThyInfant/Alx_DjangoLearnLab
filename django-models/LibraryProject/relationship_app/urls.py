@@ -22,3 +22,10 @@ urlpatterns = [
     path('book/edit/<int:pk>/', views.edit_book_view, name='edit_book'),
     path('book/delete/<int:pk>/', views.delete_book_view, name='delete_book'),
 ]
+
+# Custom permissions-secured book views
+
+# Original function name: add_book_view → alias as add_book
+add_book = add_book_view
+edit_book = edit_book_view
+delete_book = delete_book_view
