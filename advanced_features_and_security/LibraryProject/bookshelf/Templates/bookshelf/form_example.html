@@ -1,14 +1,4 @@
 <form method="post">
-  {% csrf_token %}
-
-  <label>Title:</label>
-  <input type="text" name="title" />
-
-  <label>Author:</label>
-  <input type="text" name="author" />
-
-  <label>Published Date:</label>
-  <input type="date" name="published_date" />
-
+  {% csrf_token %} {{ form.as_p }}
   <button type="submit">Submit</button>
 </form>
