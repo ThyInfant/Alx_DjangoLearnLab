@@ -1,8 +1,7 @@
 from django.shortcuts import render
 from django.views.generic.detail import DetailView
 
-from .models import Library
-from .models import Book
+from .models import Library, Book
 
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
