@@ -5,7 +5,6 @@ from django.contrib.auth import login
 from django.urls import reverse_lazy
 from .models import Book, Library
 
-
 # ------------------------
 # Book List View
 # ------------------------
@@ -22,9 +21,15 @@ class LibraryDetailView(DetailView):
     context_object_name = 'library'
 
 # ------------------------
-# User Registration View (Class-Based)
+# Registration view with the name "register"
 # ------------------------
-class SignUpView(CreateView):
-    form_class = UserCreationForm
-    template_name = 'relationship_app/register.html'  # your signup template
-    success_url = reverse_lazy('login')  # redirect to login after successful signup
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # log in automatically
+            return redirect('list_books')
+    else:
+        form = UserCreationForm()
+    return render(request, 'relationship_app/register.html', {'form': form})
