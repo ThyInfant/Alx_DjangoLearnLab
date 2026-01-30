@@ -1,5 +1,4 @@
 from django.urls import path
-from LibraryProject.bookshelf import views
 from .views import list_books, LibraryDetailView, register_view
 from django.contrib.auth.views import LoginView, LogoutView
 
