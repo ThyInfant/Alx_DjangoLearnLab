@@ -1,6 +1,5 @@
 from django.urls import path
-from LibraryProject.bookshelf import views
-from .views import list_books, LibraryDetailView, register_view
+from .views import list_books, LibraryDetailView, SignUpView
 from django.contrib.auth.views import LoginView, LogoutView
 
 urlpatterns = [
@@ -9,10 +8,9 @@ urlpatterns = [
 
     # Class-based view for library detail
     path('library/<int:pk>/', LibraryDetailView.as_view(), name='library_detail'),
+
     # Authentication URLs
-    # function-based registration
-    path('register/', register_view, name='register'),
+    path('register/', SignUpView.as_view(), name='register'),
     path('login/', LoginView.as_view(template_name='relationship_app/login.html'), name='login'),
     path('logout/', LogoutView.as_view(template_name='relationship_app/logout.html'), name='logout'),
-
 ]
