@@ -142,28 +142,22 @@ CSP_STYLE_SRC = ("'self'",)
 CSP_IMG_SRC = ("'self'",)
 
 # Redirect all HTTP requests to HTTPS
-SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = True  # Forces HTTPS everywhere
 
 # HTTP Strict Transport Security (HSTS)
-# Instructs browsers to only use HTTPS for this site for 1 year (31536000 seconds)
-SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_SECONDS = 31536000  # One year in seconds
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Apply HSTS to all subdomains
+SECURE_HSTS_PRELOAD = True  # Allow preloading in browsers
 
-# Apply HSTS policy to all subdomains
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# Secure cookies
+SESSION_COOKIE_SECURE = True  # Session cookies only over HTTPS
+CSRF_COOKIE_SECURE = True     # CSRF cookies only over HTTPS
 
-# Allow the site to be included in browser HSTS preload lists
-SECURE_HSTS_PRELOAD = True
+# Clickjacking & XSS protection
+X_FRAME_OPTIONS = 'DENY'               # Prevents framing of your site
+SECURE_CONTENT_TYPE_NOSNIFF = True     # Prevent MIME sniffing
+SECURE_BROWSER_XSS_FILTER = True       # Enables browser XSS filter
 
-# Ensure cookies are only sent over HTTPS
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-
-# Prevent clickjacking by denying framing
-X_FRAME_OPTIONS = 'DENY'
-
-# Prevent MIME type sniffing
-SECURE_CONTENT_TYPE_NOSNIFF = True
-
-# Enable browser XSS filtering
-SECURE_BROWSER_XSS_FILTER = True
-
+# Optional: Recommended additional security headers
+SECURE_REFERRER_POLICY = 'no-referrer'  # Prevent leaking referrer info
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

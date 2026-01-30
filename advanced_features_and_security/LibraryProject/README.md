@@ -37,3 +37,28 @@ SECURITY MEASURES IMPLEMENTED
 
 - django-csp middleware added
 - Only same-origin scripts, styles, and images allowed
+
+# HTTPS Security Configuration
+
+1. HTTPS Enforcement
+   - SECURE_SSL_REDIRECT = True
+   - All HTTP requests are redirected to HTTPS
+
+2. HSTS (HTTP Strict Transport Security)
+   - SECURE_HSTS_SECONDS = 31536000
+   - SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+   - SECURE_HSTS_PRELOAD = True
+
+3. Secure Cookies
+   - SESSION_COOKIE_SECURE = True
+   - CSRF_COOKIE_SECURE = True
+
+4. Secure Headers
+   - X_FRAME_OPTIONS = 'DENY' → Prevents clickjacking
+   - SECURE_CONTENT_TYPE_NOSNIFF = True → Stops MIME sniffing
+   - SECURE_BROWSER_XSS_FILTER = True → Enables XSS filtering
+   - SECURE_REFERRER_POLICY = 'no-referrer'
+
+5. Deployment Notes
+   - SSL/TLS certificates must be installed on the web server (Nginx/Apache)
+   - SECURE_PROXY_SSL_HEADER configured if behind reverse proxy
