@@ -1,7 +1,4 @@
-## Retrieve Book
-
-```python
 from bookshelf.models import Book
+
 book = Book.objects.get(title="1984")
-book.title, book.author, book.publication_year
-```
+book.id, book.title, book.author, book.published_date
