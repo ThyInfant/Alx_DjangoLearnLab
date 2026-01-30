@@ -1,27 +1,31 @@
 from relationship_app.models import Author, Book, Library, Librarian
 
+# Create an author
+author1 = Author.objects.create(name="George Orwell")
 
-# Query all books by a specific author
-author_name = "George Orwell"
-author = Author.objects.get(name=author_name)
-books_by_author = Book.objects.filter(author=author)
+# Create books
+book1 = Book.objects.create(title="1984", author=author1)
+book2 = Book.objects.create(title="Animal Farm", author=author1)
 
-for book in books_by_author:
-    print(book.title)
+# Create a library
+library1 = Library.objects.create(name="Central Library")
+library1.books.add(book1, book2)
 
+# Create a librarian
+librarian1 = Librarian.objects.create(name="Alice", library=library1)
 
-# List all books in a library
-library_name = "Central Library"
-library = Library.objects.get(name=library_name)
-books_in_library = library.books.all()
+# 1️⃣ Query all books by a specific author
+books_by_orwell = Book.objects.filter(author__name="George Orwell")
+print("Books by George Orwell:")
+for book in books_by_orwell:
+  print(book.title)
 
+# 2️⃣ List all books in a library
+books_in_library = library1.books.all()
+print(f"\nBooks in {library1.name}:")
 for book in books_in_library:
-    print(book.title)
+  print(book.title)
 
-
-# Retrieve the librarian for a library
-library_name = "Central Library"
-library = Library.objects.get(name=library_name)
-librarian = Librarian.objects.get(library=library)
-
-print(librarian.name)
+# 3️⃣ Retrieve the librarian for a library
+library_librarian = library1.librarian
+print(f"\nLibrarian of {library1.name}: {library_librarian.name}")
