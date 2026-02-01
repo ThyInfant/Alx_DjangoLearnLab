@@ -5,7 +5,7 @@ from rest_framework.generics import ListAPIView
 from rest_framework.viewsets import ModelViewSet
 
 # from rest_framework.generics.ListAPIView
-
+# from rest_framework.viewsets.ModelViewSet
 
 # Create your views here.
 class BookList(ListAPIView):
