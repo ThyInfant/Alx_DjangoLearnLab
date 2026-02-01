@@ -132,4 +132,6 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',  # default, overridden per-view
     ],
+    
+    # "rest_framework.permissions.IsAuthenticated"
 }
