@@ -1,40 +1,25 @@
-# DRF generic views for handling Book CRUD operations
+# DRF generic views with filtering, searching, and ordering for Book model
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
 from .models import Book
 from .serializers import BookSerializer
 
 
-# List all books (read-only for everyone, write requires auth)
+# List all books with advanced query capabilities
 class BookListView(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
+    # Enable filtering by specific fields
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['title', 'publication_year', 'author']
 
-# Retrieve a single book by ID (read-only for everyone)
-class BookDetailView(generics.RetrieveAPIView):
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    # Enable text search on title and author's name
+    search_fields = ['title', 'author__name']
 
-
-# Create a new book (authenticated users only)
-class BookCreateView(generics.CreateAPIView):
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
-    permission_classes = [IsAuthenticated]
-
-
-# Update an existing book (authenticated users only)
-class BookUpdateView(generics.UpdateAPIView):
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
-    permission_classes = [IsAuthenticated]
-
-
-# Delete a book (authenticated users only)
-class BookDeleteView(generics.DestroyAPIView):
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
-    permission_classes = [IsAuthenticated]
+    # Allow ordering by selected fields
+    ordering_fields = ['title', 'publication_year']
+    ordering = ['title']
