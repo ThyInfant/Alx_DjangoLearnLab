@@ -7,6 +7,7 @@ from .views import (
     BookUpdateView,
     BookDeleteView,
 )
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 
 urlpatterns = [
     path('books/', BookListView.as_view(), name='book-list'),
