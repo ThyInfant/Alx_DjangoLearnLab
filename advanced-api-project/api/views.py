@@ -9,6 +9,7 @@ from django_filters import rest_framework
 
 # List all books with advanced query capabilities
 # filters.OrderingFilter allows clients to specify the ordering of results using query parameters
+# filters.SearchFilter enables text search on specified fields using the 'search' query parameter
 class BookListView(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
