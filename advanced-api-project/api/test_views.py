@@ -1,0 +1,88 @@
+# Django and DRF testing tools for API endpoint validation
+from django.urls import reverse
+from rest_framework import status
+from rest_framework.test import APITestCase
+from django.contrib.auth.models import User
+from .models import Author, Book
+
+
+# Test suite for Book API endpoints and behaviors
+class BookAPITestCase(APITestCase):
+
+    # Set up initial test data and user accounts
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='testpass')
+        self.author = Author.objects.create(name='Test Author')
+        self.book = Book.objects.create(title='Sample Book', publication_year=2020, author=self.author)
+
+        self.list_url = '/api/books/'
+        self.create_url = '/api/books/create/'
+        self.update_url = f'/api/books/update/{self.book.id}/'
+        self.delete_url = f'/api/books/delete/{self.book.id}/'
+        self.detail_url = f'/api/books/{self.book.id}/'
+
+    # Test retrieving the list of books without authentication
+    def test_list_books(self):
+        response = self.client.get(self.list_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    # Test retrieving a single book's details
+    def test_retrieve_book(self):
+        response = self.client.get(self.detail_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['title'], self.book.title)
+
+    # Test creating a book requires authentication
+    def test_create_book_requires_auth(self):
+        data = {'title': 'New Book', 'publication_year': 2021, 'author': self.author.id}
+        response = self.client.post(self.create_url, data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    # Test authenticated user can create a book
+    def test_create_book_authenticated(self):
+        self.client.login(username='testuser', password='testpass')
+        data = {'title': 'New Book', 'publication_year': 2021, 'author': self.author.id}
+        response = self.client.post(self.create_url, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    # Test updating a book requires authentication
+    def test_update_book_requires_auth(self):
+        data = {'title': 'Updated Title', 'publication_year': 2020, 'author': self.author.id}
+        response = self.client.put(self.update_url, data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    # Test authenticated user can update a book
+    def test_update_book_authenticated(self):
+        self.client.login(username='testuser', password='testpass')
+        data = {'title': 'Updated Title', 'publication_year': 2020, 'author': self.author.id}
+        response = self.client.put(self.update_url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.book.refresh_from_db()
+        self.assertEqual(self.book.title, 'Updated Title')
+
+    # Test deleting a book requires authentication
+    def test_delete_book_requires_auth(self):
+        response = self.client.delete(self.delete_url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    # Test authenticated user can delete a book
+    def test_delete_book_authenticated(self):
+        self.client.login(username='testuser', password='testpass')
+        response = self.client.delete(self.delete_url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(Book.objects.filter(id=self.book.id).exists())
+
+    # Test filtering books by publication year
+    def test_filter_books(self):
+        response = self.client.get(self.list_url + '?publication_year=2020')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    # Test searching books by title
+    def test_search_books(self):
+        response = self.client.get(self.list_url + '?search=Sample')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    # Test ordering books by publication year
+    def test_order_books(self):
+        response = self.client.get(self.list_url + '?ordering=publication_year')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
