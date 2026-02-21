@@ -3,6 +3,7 @@ from .views import PostViewSet, CommentViewSet
 
 from django.urls import path
 from .views import user_feed
+from .views import FeedView
 
 router = DefaultRouter()
 router.register(r'posts', PostViewSet)
@@ -12,4 +13,6 @@ urlpatterns = router.urls
 
 urlpatterns += [
     path('feed/', user_feed, name='user_feed'),
+    path('feed/', FeedView.as_view(), name='feed'),
 ]
+
