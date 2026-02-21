@@ -58,3 +58,17 @@ POST /api/comments/
 GET /api/comments/{id}/
 PUT /api/comments/{id}/
 DELETE /api/comments/{id}/
+
+## Follow System
+
+POST /api/accounts/follow/<user_id>/
+POST /api/accounts/unfollow/<user_id>/
+
+Authentication required.
+
+## Feed
+
+GET /api/feed/
+
+Returns posts from users the authenticated user follows.
+Posts are ordered by most recent first.
