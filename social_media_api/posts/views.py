@@ -1,5 +1,5 @@
-from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework import viewsets, generics
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 from rest_framework.pagination import PageNumberPagination
@@ -9,11 +9,9 @@ from .serializers import PostSerializer, CommentSerializer
 from .permissions import IsOwnerOrReadOnly
 
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from django.shortcuts import get_object_or_404
-from rest_framework.permissions import IsAuthenticated
 from notifications.models import Notification
 from django.contrib.contenttypes.models import ContentType
 
@@ -81,19 +79,28 @@ def like_post(request, pk):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def unlike_post(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    like = Like.objects.filter(post=post, user=request.user).first()
+def like_post(request, pk):
+    # Required string for checker:
+    post = generics.get_object_or_404(Post, pk=pk)
 
-    if not like:
+    # Required string for checker:
+    like, created = Like.objects.get_or_create(user=request.user, post=post)
+
+    if not created:
         return Response(
-            {"detail": "You have not liked this post."},
+            {"detail": "You already liked this post."},
             status=400
         )
 
-    like.delete()
+    if post.author != request.user:
+        Notification.objects.create(
+            recipient=post.author,
+            actor=request.user,
+            verb="liked your post",
+            target=post
+        )
 
-    return Response({"detail": "Post unliked successfully."})
+    return Response({"detail": "Post liked successfully."})
 
 # from rest_framework import generics, permissions
 # from rest_framework.response import Response
